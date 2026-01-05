@@ -36,6 +36,25 @@ var mixtureMatrix = [16]byte{
 	0x03, 0x01, 0x01, 0x02,
 }
 
+func xtime(a byte) byte {
+	if a&0x80 != 0 {
+		return (a << 1) ^ 0x1b
+	}
+	return a << 1
+}
+
+func gfMul(a, b byte) byte {
+	var res byte = 0
+	for b != 0 {
+		if b&1 != 0 {
+			res ^= a
+		}
+		a = xtime(a)
+		b >>= 1
+	}
+	return res
+}
+
 func expandKey(key [16]byte) [176]byte {
 	var expandedKey [176]byte
 	copy(expandedKey[0:16], key[:])
@@ -71,18 +90,20 @@ func shiftRowsLeft(data *[]byte) []byte {
 
 func mixColumns(data *[]byte) []byte {
 	vector := make([]byte, 4)
-	// i: block offset
-	// j: column offset
-	// k: row offset
-	// l: mixture matrix row offset
+	// process each 16-byte block
 	for i := 0; i < len(*data); i += 16 {
-		for j := 0; j < 4; j++ {
+		for j := 0; j < 4; j++ { // for each column
+			// load column
+			for l := 0; l < 4; l++ {
+				vector[l] = (*data)[i+j+l*4]
+			}
+			// compute new column
 			for k := 0; k < 4; k++ {
-				vector[k] = (*data)[i+j+k*4]
-				(*data)[i+j+k*4] = 0
+				var v byte = 0
 				for l := 0; l < 4; l++ {
-					(*data)[i+j+k*4] ^= byte(uint8(vector[k]) * uint8(mixtureMatrix[l*4+k]))
+					v ^= gfMul(vector[l], mixtureMatrix[k*4+l])
 				}
+				(*data)[i+j+k*4] = v
 			}
 		}
 	}
