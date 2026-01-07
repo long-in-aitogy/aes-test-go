@@ -4,6 +4,7 @@ import (
 	"encoding/base64"
 	"fmt"
 	"log"
+	"os"
 	"os/exec"
 )
 
@@ -13,7 +14,13 @@ func main() {
 	fmt.Println()
 	fmt.Println("AES-128 Expanded Key:", expandKey(initialKey))
 
-	initialData := "Hello ! This is working ! Leonid" //32 BYTE STRING TO TEST
+	var initialData string
+	if len(os.Args) == 1 {
+		initialData = "Hello ! This is working ! Leonid" //32 BYTE STRING TO TEST
+	} else {
+		initialData = os.Args[1]
+	}
+
 	initialDataBytes := []byte(initialData)
 	fmt.Println()
 	fmt.Println("Initial Data:", initialData)

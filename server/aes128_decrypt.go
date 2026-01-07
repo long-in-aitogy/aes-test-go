@@ -107,6 +107,17 @@ func invMixColumns(data *[]byte) []byte {
 	return *data
 }
 
+func removePadFromData(data *[]byte) []byte {
+	padding := int((*data)[len(*data)-1])
+	if padding > 16 || padding == 0 {
+		return *data // Invalid padding, return as is
+	}
+	if (*data)[len(*data)-1] != (*data)[len(*data)-padding] {
+		return *data // Invalid padding, return as is
+	}
+	return (*data)[:len(*data)-padding]
+}
+
 func aes128Decrypt(data *[]byte, expandedKey [176]byte) []byte {
 	var roundKey [16]byte
 	// Initial round key addition
@@ -121,5 +132,6 @@ func aes128Decrypt(data *[]byte, expandedKey [176]byte) []byte {
 			invMixColumns(data)
 		}
 	}
+	*data = removePadFromData(data)
 	return *data
 }

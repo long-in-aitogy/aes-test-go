@@ -55,6 +55,14 @@ func gfMul(a, b byte) byte {
 	return res
 }
 
+func padData(data *[]byte) []byte {
+	padding := 16 - (len(*data) % 16)
+	for i := 0; i < padding; i++ {
+		*data = append(*data, byte(padding))
+	}
+	return *data
+}
+
 func expandKey(key [16]byte) [176]byte {
 	var expandedKey [176]byte
 	copy(expandedKey[0:16], key[:])
@@ -112,6 +120,8 @@ func mixColumns(data *[]byte) []byte {
 
 func aesEncryptBlock(data *[]byte, expandedKey [176]byte) []byte {
 	var roundKey [16]byte
+	// Padding to ensure data length is multiple of 16
+	padData(data)
 	// Initial round key addition
 	copy(roundKey[:], expandedKey[0:16])
 	addRoundKey(data, roundKey)
