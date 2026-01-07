@@ -5,7 +5,7 @@ SRC = main.go aes128.go
 all: build
 
 build:
-	go build -o build/$(PROGNAME).exe $(SRC)
+	go build -o $(CURDIR)/build/$(PROGNAME).exe $(SRC)
 
 clean:
-	Remove-Item -Path -Recurse build
+	powershell -c "Remove-Item -Path "$(CURDIR)/build" -Recurse"
