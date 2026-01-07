@@ -2,9 +2,9 @@ package main
 
 import (
 	"encoding/base64"
+	"flag"
 	"fmt"
 	"log"
-	"os"
 	"os/exec"
 )
 
@@ -14,16 +14,13 @@ func main() {
 	fmt.Println()
 	fmt.Println("AES-128 Expanded Key:", expandKey(initialKey))
 
-	var initialData string
-	if len(os.Args) == 1 {
-		initialData = "Hello ! This is working ! Leonid" //32 BYTE STRING TO TEST
-	} else {
-		initialData = os.Args[1]
-	}
+	initialData := flag.String("data", "Hello ! This is working ! Leonid", "Data to encrypt")
+	serverProg := flag.String("server", "../server/server.exe", "Path to server executable")
+	flag.Parse()
 
-	initialDataBytes := []byte(initialData)
+	initialDataBytes := []byte(*initialData)
 	fmt.Println()
-	fmt.Println("Initial Data:", initialData)
+	fmt.Println("Initial Data:", *initialData)
 	fmt.Println("Initial Data In Bytes:", initialDataBytes)
 	fmt.Println("Initial Data length:", len(initialDataBytes))
 	fmt.Println()
@@ -36,7 +33,7 @@ func main() {
 
 	fmt.Println()
 	fmt.Println("-- Calling server to decrypt --")
-	cmd := exec.Command("../server/server.exe", b64)
+	cmd := exec.Command(*serverProg, b64)
 
 	output, err := cmd.CombinedOutput()
 	if err != nil {
