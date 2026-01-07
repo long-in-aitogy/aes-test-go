@@ -15,7 +15,7 @@ func main() {
 	fmt.Println("AES-128 Expanded Key:", expandKey(initialKey))
 
 	initialData := flag.String("data", "Hello ! This is working ! Leonid", "Data to encrypt")
-	serverProg := flag.String("server", "../server/server.exe", "Path to server executable")
+	serverProg := flag.String("server", "../server/build/server.exe", "Path to server executable")
 	flag.Parse()
 
 	initialDataBytes := []byte(*initialData)
