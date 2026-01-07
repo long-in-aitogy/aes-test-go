@@ -8,4 +8,4 @@ build:
 	go build -o build/$(PROGNAME).exe $(SRC)
 
 clean:
-	rm -rf build/*
+	Remove-Item -Path -Recurse build
