@@ -13,22 +13,19 @@ func main() {
 	fmt.Println("AES-128 Expanded Key:", expandKey(initialKey))
 
 	var encryptedDataBytes []byte
-	if len(os.Args) == 1 {
-		encryptedDataBytes = []byte("Hello ! This is working ! Leonid")
-	} else {
+	if len(os.Args) != 1 {
 		decoded, err := base64.StdEncoding.DecodeString(os.Args[1])
 		if err != nil {
 			fmt.Println("Failed to decode base64:", err)
 			return
 		}
 		encryptedDataBytes = decoded
-	}
 
-	fmt.Println()
-	if len(os.Args) == 1 {
-		fmt.Println("Encrypted Data:", string(encryptedDataBytes))
-	} else {
+		fmt.Println()
 		fmt.Println("Encrypted Data (base64):", os.Args[1])
+	} else {
+		// connect to MQTT broker and get test data
+
 	}
 	fmt.Println("Encrypted Data In Bytes:", encryptedDataBytes)
 	fmt.Println("Encrypted Data length:", len(encryptedDataBytes))

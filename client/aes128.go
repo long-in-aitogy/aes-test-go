@@ -56,9 +56,11 @@ func gfMul(a, b byte) byte {
 }
 
 func padData(data *[]byte) []byte {
-	padding := 16 - (len(*data) % 16)
-	for i := 0; i < padding; i++ {
-		*data = append(*data, byte(padding))
+	if len(*data)%16 != 0 {
+		padding := 16 - (len(*data) % 16)
+		for i := 0; i < padding; i++ {
+			*data = append(*data, byte(padding))
+		}
 	}
 	return *data
 }

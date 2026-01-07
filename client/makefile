@@ -1,6 +1,6 @@
 # Makefile for AES-128 Server
 PROGNAME = client
-SRC = main.go aes128.go
+SRC = main.go aes128.go mqttclient.go
 
 all: build
 
@@ -9,3 +9,5 @@ build:
 
 clean:
 	powershell -c "Remove-Item -Path "$(CURDIR)/build" -Recurse"
+
+rebuild: clean build
